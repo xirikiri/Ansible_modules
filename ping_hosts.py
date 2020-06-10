@@ -26,7 +26,7 @@ def run_module():
     # Создаем регулярное выражение
     regex = re.compile('(\\n)')
     answer = ''
-    # Пробегаемся по нужным хостам
+    # Пробегаемся по хостам из аргумента
     for x in module.params['hosts']:
         # Формируем подпроцесс на удаленном узле
         result_ping = subprocess.Popen(["ping", x, "-c", "1"], stdout=subprocess.PIPE)
@@ -34,14 +34,16 @@ def run_module():
         result_ping.wait()
         # Читаем результат выполнения процесса
         temp_result = result_ping.stdout.read()
-        # Разбиваем регулярным выражением ответ комманды
+        # Разбиваем регулярным выражением ответ команды
         arrayresponse = regex.split(temp_result)
         # Достаем последнюю строчку с помощью регулярки и прибавляем ее к предыдущим
+        # При достаточно длине ответа
+        # Если длина недостаточна, то считаем, что до хоста не достучались
         if len(arrayresponse) > 2:
             answer = answer + x + ':' + regex.split(temp_result)[-3] + ';'
         else:
             answer = answer + x + ':' + 'NOT AVAILABLE' + ';'
-    # Устанавливаем ответ молуля
+    # Устанавливаем ответ модуля
     result['response'] = answer
     # Завершаем работу модуля
     module.exit_json(**result)
