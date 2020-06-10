@@ -3,7 +3,7 @@ import subprocess
 import re
 
 #Формат запуска модуля из консоли
-#ansible all -m ping_hosts -a "hosts=ya.ru,mail.ru,localhost" 
+#ansible all -m ping_hosts -a "hosts=ya.ru,mail.ru"
 #Предварительно установить ansible на локальной машине
 #Закинуть модуль в папку с модулями
 
@@ -33,8 +33,13 @@ def run_module():
         result_ping.wait()
         #Читаем результат выполнения процесса
         temp_result = result_ping.stdout.read()
+        #Разбиваем регулярным выражением ответ комманды
+        arrayresponse = regex.split(temp_result)
         #Достаем последнюю строчку с помощью регулярки и прибавляем ее к предыдущим
-        answer = answer + x +':' + regex.split(temp_result)[-3] + ';'
+        if list.count(arrayresponse[-3]>0):
+            answer = answer + x +':' + regex.split(temp_result)[-3] + ';'
+        else:
+            answer = answer + x +':' + 'NOT AVAILABLE' + ';'
     #Устанавливаем ответ молуля
     result['response'] = answer
     #Завершаем работу модуля
