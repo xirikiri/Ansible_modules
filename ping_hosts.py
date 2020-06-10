@@ -36,7 +36,7 @@ def run_module():
         #Разбиваем регулярным выражением ответ комманды
         arrayresponse = regex.split(temp_result)
         #Достаем последнюю строчку с помощью регулярки и прибавляем ее к предыдущим
-        if list.count(arrayresponse[-3])>0:
+        if list.count(arrayresponse)>2:
             answer = answer + x +':' + regex.split(temp_result)[-3] + ';'
         else:
             answer = answer + x +':' + 'NOT AVAILABLE' + ';'
